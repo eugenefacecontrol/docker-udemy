@@ -1,0 +1,38 @@
+# version of the docker-compose
+version: '3'
+# Service is like saying a type of container, and we say: Here is what we want you to do:
+services: 
+# The name of the service:
+  web:
+    # stdin_open: true
+    # environment:
+      # Make your reack app to automatically reload after a code change
+      # - CHOKIDAR_USEPOLLING=true
+    # Look in the current directory for the specified docker file and use it
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+  # - means array of elements. <local port>:<container port>
+    - "3000:3000"
+    volumes:
+      - /home/node/app/node_modules
+      - .:/home/node/app
+# The name of the service:
+  tests:
+     # Allows us to send signals (CTRL+C, CTRL+P + CTRL+Q) into the container:
+    stdin_open: true
+    tty: true
+    # Look in the current directory for the specified docker file and use it
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - /home/node/app/node_modules
+      - .:/home/node/app
+      # Override the default command. A little bit different array
+    command: ["npm", "run", "test"]
+
+
+# docker build -f Dockerfile.dev -t yauhenisheima:frontend .
+# docker run -it -p 3000:3000 -v /home/node/app/node_modules -v ~/frontend:/home/node/app yauhenisheima:frontend
