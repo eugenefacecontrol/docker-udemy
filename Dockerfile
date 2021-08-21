@@ -28,5 +28,8 @@ COPY --chown=node:node ./ ./
 # Build the production build
 RUN npm run build
 
+# Does nothing for us automatically, but for elastic beanstalk it is automatically gets mapped for incomming traffic
+EXPOSE 80
+
 FROM nginx
 COPY --from=0 /home/node/app/build /usr/share/nginx/html
